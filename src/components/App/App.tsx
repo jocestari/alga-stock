@@ -1,7 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import TestComponent from '../TestComponent/'
+import TestComponent from '../TestComponent'
+import ClassComponet from '../ClassComponent'
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         
         <TestComponent />
+        <ClassComponet name="James"/>
       </header>
     </div>
   );
