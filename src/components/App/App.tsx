@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Header from '../Header';
 import Container from '../../shared/Container'
 import './App.css';
+import Table from '../../shared/Table'
 
 function App() {
   const [street, setStreet] = useState() 
@@ -10,7 +11,7 @@ function App() {
       <Header title='AlgaStock'/> 
       
       <Container>
-       
+        <Table />
       </Container>  
       
     </div>
