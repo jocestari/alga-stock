@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from '../Header';
-import Button from '../Button'
+import Button from '../../shared/Button'
+import Container from '../../shared/Container'
 import './App.css';
 
 function TestComponent () {
@@ -17,7 +18,7 @@ function App() {
   return (
     <div className="App">
       <Header title='AlgaStock'/> 
-      <div className="Container">
+      <Container>
         <Button 
           onClick={() => window.alert('Olá Marina!')}
           appendIcon={<TestComponent />}
@@ -25,7 +26,8 @@ function App() {
           Alert
           
         </Button>
-      </div>
+      </Container>  
+      
     </div>
   );
 }
