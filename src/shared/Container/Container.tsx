@@ -2,7 +2,7 @@ import React from 'react'
 import './Container.css'
 
 const Container: React.FC = (props) =>{
-    return  <div className="appContainer">
+    return  <div className="AppContainer">
                 { props.children }
             </div>
 }
