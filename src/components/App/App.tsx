@@ -21,19 +21,16 @@ function App() {
     <div className="App">
       <Header title='AlgaStock'/> 
       <Container>
-        <Button 
-          onClick={() => window.alert('Olá Marina!')}
-          appendIcon={<TestComponent />}
-        >
-          Alert
-          
-        </Button>
-        <Input 
-          label="street" 
-          placeholder="E.g.: 15th Avenue"
-          value={ street }
-          onChange={e => setStreet(e.target.value)}
-        />
+        <ul>
+          {
+            ['Daniel', 'William', 'Thiago', 'Daniel'].map((name, index) => {
+              return <li key={index}>
+                {name}
+              </li>
+            })
+          }
+        </ul>
+        
       </Container>  
       
     </div>
