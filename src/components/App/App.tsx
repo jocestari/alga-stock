@@ -4,7 +4,7 @@ import Container from '../../shared/Container'
 import './App.css';
 import Table, { TableHeader } from '../../shared/Table'
 import Products from '../../shared/Table/Table.mockdata'
-import ProductForm from '../Products/ProductForm'
+import ProductForm, { ProductCreator } from '../Products/ProductForm'
 
 const headers: TableHeader[] = [
   { key: 'id', value:'#'},
@@ -15,7 +15,19 @@ const headers: TableHeader[] = [
 
 
 function App() {
-  const [street, setStreet] = useState() 
+  const [products, setProducts] = useState(Products)
+
+  const handleProductSubmit = (product: ProductCreator) => {
+    setProducts([
+      ...products,
+      {
+        id: products.length + 1,
+        ...product
+      }
+    ])
+
+  }
+
   return (
     <div className="App">
       <Header title='AlgaStock'/> 
@@ -23,10 +35,12 @@ function App() {
       <Container>
         <Table 
           headers={headers}
-          data={Products}
+          data={products}
         />
         
-        <ProductForm />
+        <ProductForm 
+          onSubimit={handleProductSubmit}
+        />
 
       </Container>  
       
