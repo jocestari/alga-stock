@@ -17,7 +17,8 @@ const headers: TableHeader[] = [
 
 function App() {
   const [products, setProducts] = useState(Products)
-  const [updatingProduct, setUpdatingProduct] = useState<Product | undefined>(products[0])
+  const [updatingProduct, setUpdatingProduct] = useState<Product | undefined>(undefined)
+  
   const handleProductSubmit = (product: ProductCreator) => {
     setProducts([
       ...products,
@@ -38,21 +39,10 @@ function App() {
   
     setUpdatingProduct(undefined)
   }
-  const handleProductEdit = ( product: Product ) => {
-      setUpdatingProduct(product)
-  }
-
-  const handleProductDetail = ( product: Product ) => {
-    Swal.fire(
-      'Product Details',
-      `${product.name} costs $${product.price} and we have ${product.stock} available in stock.`,
-      'info'
-    )
-
-  }
 
   const deleteProduct = (id:number) => {
     setProducts(products.filter( product => product.id !== id ))
+    setUpdatingProduct(undefined) //clean the form after delete
   }
 
   const handleProductDelete = (product: Product) => {
@@ -77,7 +67,21 @@ function App() {
         }
       })
   }
-  
+
+  const handleProductEdit = ( product: Product ) => {
+      setUpdatingProduct(product)
+  }
+
+  const handleProductDetail = ( product: Product ) => {
+    Swal.fire(
+      'Product Details',
+      `${product.name} costs $${product.price} and we have ${product.stock} available in stock.`,
+      'info'
+    )
+
+  }
+
+ 
   return (
     <div className="App">
       <Header title='AlgaStock'/> 
