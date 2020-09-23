@@ -114,7 +114,9 @@ const ProductForm: React.FC<ProductFormProps> = (props) => {
             required
         />
         <Button>
-            Submit
+          {  
+            form.id ? `Update ${form.name}` : 'Submit'
+          }  
         </Button>
     </Form>
 }
