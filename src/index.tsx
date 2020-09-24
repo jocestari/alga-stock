@@ -4,10 +4,6 @@ import './index.css';
 import App from './components/App';
 import http from './utils/http'
 
-http.get('/posts')
-http.get('/posts/1')
-http.get('https://viacep.com.br/ws/29090210/json/')
-
 ReactDOM.render(
   <React.StrictMode>
     <App />
