@@ -9,7 +9,7 @@ import {
 import { Product } from '../../shared/Table/Table.mockdata'
 import ProductForm, { ProductCreator } from './ProductForm'
 import Swal from 'sweetalert2'
-
+import { connect } from 'react-redux'
 
 const headers: TableHeader[] = [
     { key: 'id', value:'#'},
@@ -18,20 +18,24 @@ const headers: TableHeader[] = [
     { key: 'stock', value:'Available Stock', right: true}
   ]
 
-const ProductsCRUD = () => {
-const [products, setProducts] = useState<Product[]>([])
-const [updatingProduct, setUpdatingProduct] = useState<Product | undefined>(undefined)
+declare interface ProductsCRUDProps {
+    products: Product[]
+}
+
+const ProductsCRUD: React.FC<ProductsCRUDProps> = (props) => {
+    const [updatingProduct, setUpdatingProduct] = useState<Product | undefined>(undefined)
+    //const [products, setProducts] = useState<Product[]>([])
 
 async function fetchData() {
-const _products = await getAllProducts()
-setProducts(_products)
+// const _products = await getAllProducts()
+// setProducts(_products)
 }
 
 useEffect(() => {
     fetchData()
 }, [])
 
-getAllProducts().then(console.log)
+//getAllProducts().then(console.log)
 
 const handleProductSubmit = async (product: ProductCreator) => {
 try {
@@ -104,7 +108,7 @@ Swal.fire(
 return <>
     <Table 
         headers={headers}
-        data={products}
+        data={props.products}
         enableActions={true}
         onDelete={handleProductDelete}
         onDetail={handleProductDetail}
@@ -119,4 +123,8 @@ return <>
     </>
 }
 
-export default ProductsCRUD
+const mapStateToProps = (state: any) => ({
+    products: state.products
+})
+
+export default connect(mapStateToProps)(ProductsCRUD)
