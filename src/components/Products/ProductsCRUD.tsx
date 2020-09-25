@@ -3,7 +3,6 @@ import Table, { TableHeader } from '../../shared/Table'
 import {
     createSingleProduct,
     deleteSingleProduct,
-    getAllProducts,
     updateSingleProduct
 } from '../../services/Products.Service'
 import { Product } from '../../shared/Table/Table.mockdata'
