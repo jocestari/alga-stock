@@ -5,7 +5,7 @@ import ProductForm, { ProductCreator } from './ProductForm'
 import Swal from 'sweetalert2'
 import { connect, useDispatch } from 'react-redux'
 import * as ProductsAction from '../../redux/Products/Products.actions'
-import { RootState } from '../../redux'
+import { RootState, ThunkDispatch } from '../../redux'
 
 const headers: TableHeader[] = [
     { key: 'id', value:'#'},
@@ -19,107 +19,80 @@ declare interface ProductsCRUDProps {
 }
 
 const ProductsCRUD: React.FC<ProductsCRUDProps> = (props) => {
-    const dispatch = useDispatch()
+    const dispatch: ThunkDispatch = useDispatch()
+
+    const showErrorAlert = (err: Error) => Swal.fire('Oops!',err.message,'error')
+
     const [updatingProduct, setUpdatingProduct] = useState<Product | undefined>(undefined)
-    //const [products, setProducts] = useState<Product[]>([])
 
-async function fetchData() {
-    try{
-        await dispatch(ProductsAction.getProducts())
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    async function fetchData() {
+        dispatch(ProductsAction.getProducts())
+            .catch(showErrorAlert)
+    }
+
+    const handleProductSubmit = async (product: ProductCreator) => {
+        dispatch(ProductsAction.insertNewProduct(product))
+            .catch(showErrorAlert)
+    }
+
+    const handleProductUpdate = async (newProduct: Product) => {
+        dispatch(ProductsAction.updateProduct(newProduct))
+            .then(() => setUpdatingProduct(undefined))
+            .catch(showErrorAlert)
+    }
+
+    const deleteProduct = async (id:string) => {
+    dispatch(ProductsAction.deleteProduct(id))
+        .then(() => {
+            Swal.fire('Uhul!!', 'Product sucessfully deleted', 'success')
+            setUpdatingProduct(undefined) //clean the form after delete
+        })
+        .catch(showErrorAlert)
+    }
+
+    const handleProductDelete = (product: Product) => {
+    Swal
+        .fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#09f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: `Yes, delete ${product.name}!`
+        })
+        .then(({value}) => value && deleteProduct(product._id))
+    }
+
+
+    const handleProductDetail = ( product: Product ) => {
+    Swal.fire(
+        'Product Details',
+        `${product.name} costs $${product.price} and we have ${product.stock} available in stock.`,
+        'info'
+    )
+    }
+
+    return <>
+        <Table 
+            headers={headers}
+            data={props.products}
+            enableActions={true}
+            onDelete={handleProductDelete}
+            onDetail={handleProductDetail}
+            onEdit={setUpdatingProduct}
+        />
         
-    } catch(err){
-        Swal.fire('Oops!',err.message,'error')
-    }
-
-}
-
-useEffect(() => {
-    fetchData()
-}, [])
-
-//getAllProducts().then(console.log)
-
-const handleProductSubmit = async (product: ProductCreator) => {
-try {
-    dispatch(ProductsAction.insertNewProduct(product))
-} catch (err) {
-    Swal.fire('Oops!', err.message, 'error')
-}
-}
-
-const handleProductUpdate = async (newProduct: Product) => {
-try {
-    await dispatch(ProductsAction.updateProduct(newProduct))
-    setUpdatingProduct(undefined)
-} catch(err) {
-    Swal.fire('Oops!', err.message, 'error')
-}
-
-
-}
-
-const deleteProduct = async (id:string) => {
-try {
-    await dispatch(ProductsAction.deleteProduct(id))
-    Swal.fire('Uhul!!', 'Product sucessfully deleted', 'success')
-    setUpdatingProduct(undefined) //clean the form after delete
-} catch(err){
-    Swal.fire('Oops!', err.message, 'error')
-}
-}
-
-const handleProductDelete = (product: Product) => {
-Swal
-    .fire({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#09f',
-    cancelButtonColor: '#d33',
-    confirmButtonText: `Yes, delete ${product.name}!`
-    })
-    .then((result) => {
-    if (result.isConfirmed) {
-        deleteProduct(product._id)
-        Swal.fire(
-        'Deleted!',
-        'Your file has been deleted.',
-        'success'
-        )
-    }
-    })
-}
-
-const handleProductEdit = ( product: Product ) => {
-    setUpdatingProduct(product)
-}
-
-const handleProductDetail = ( product: Product ) => {
-Swal.fire(
-    'Product Details',
-    `${product.name} costs $${product.price} and we have ${product.stock} available in stock.`,
-    'info'
-)
-
-}
-
-return <>
-    <Table 
-        headers={headers}
-        data={props.products}
-        enableActions={true}
-        onDelete={handleProductDelete}
-        onDetail={handleProductDetail}
-        onEdit={handleProductEdit}
-    />
-    
-    <ProductForm 
-        form = { updatingProduct }
-        onSubmit={handleProductSubmit}
-        onUpdate={handleProductUpdate}
-    />
-    </>
+        <ProductForm 
+            form = { updatingProduct }
+            onSubmit={handleProductSubmit}
+            onUpdate={handleProductUpdate}
+        />
+        </>
 }
 
 const mapStateToProps = (state: RootState) => ({
