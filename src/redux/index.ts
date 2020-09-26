@@ -26,7 +26,9 @@ export declare interface Action<T = any> {
     payload?: T
 }
 
+export type RootState = ReturnType<typeof reducers>
+
 export type Thunk<T = any> = 
-    ThunkAction<void,typeof reducers, unknown, Action<T>>
+    ThunkAction<void, RootState, unknown, Action<T>>
 
 export default store

@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Table, { TableHeader } from '../../shared/Table'
-import {
-    deleteSingleProduct,
-    updateSingleProduct
-} from '../../services/Products.Service'
 import { Product } from '../../shared/Table/Table.mockdata'
 import ProductForm, { ProductCreator } from './ProductForm'
 import Swal from 'sweetalert2'
 import { connect, useDispatch } from 'react-redux'
-import { getProducts, insertNewProduct } from '../../redux/Products/Products.actions'
+import * as ProductsAction from '../../redux/Products/Products.actions'
+import { RootState } from '../../redux'
 
 const headers: TableHeader[] = [
     { key: 'id', value:'#'},
@@ -28,8 +25,8 @@ const ProductsCRUD: React.FC<ProductsCRUDProps> = (props) => {
 
 async function fetchData() {
     try{
-        await dispatch(getProducts())
-        Swal.fire('Uhu!','Fetch done','success')
+        await dispatch(ProductsAction.getProducts())
+        
     } catch(err){
         Swal.fire('Oops!',err.message,'error')
     }
@@ -44,8 +41,7 @@ useEffect(() => {
 
 const handleProductSubmit = async (product: ProductCreator) => {
 try {
-    dispatch(insertNewProduct(product))
-    fetchData()
+    dispatch(ProductsAction.insertNewProduct(product))
 } catch (err) {
     Swal.fire('Oops!', err.message, 'error')
 }
@@ -53,9 +49,8 @@ try {
 
 const handleProductUpdate = async (newProduct: Product) => {
 try {
-    await updateSingleProduct(newProduct)
+    await dispatch(ProductsAction.updateProduct(newProduct))
     setUpdatingProduct(undefined)
-    fetchData()
 } catch(err) {
     Swal.fire('Oops!', err.message, 'error')
 }
@@ -65,9 +60,8 @@ try {
 
 const deleteProduct = async (id:string) => {
 try {
-    await deleteSingleProduct(id)
+    await dispatch(ProductsAction.deleteProduct(id))
     Swal.fire('Uhul!!', 'Product sucessfully deleted', 'success')
-    fetchData()
     setUpdatingProduct(undefined) //clean the form after delete
 } catch(err){
     Swal.fire('Oops!', err.message, 'error')
@@ -128,7 +122,7 @@ return <>
     </>
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: RootState) => ({
     products: state.products
 })
 
