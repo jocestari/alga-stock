@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import Swal from 'sweetalert2'
 import Button from '../../shared/Button'
 import Form from '../../shared/Form'
 import Input from '../../shared/Input'
+import { login } from '../../redux/Authentication/Authentication.actions'
 
 const LoginForm = () => {
+    const dispatch = useDispatch()
     const [form, setForm] = useState({
         user:'',
         pass: ''
     })
 
-    const handleLogin = () => {
-        console.table(form)
+    const handleLogin = async () => {
+        try {
+            await dispatch(login( form ))
+        } catch ( err ) {
+            Swal.fire('Error', err.response?.data?.message || err.message, 'error')
+        }
     }
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +41,7 @@ const LoginForm = () => {
         <Input 
             type="password"
             label="Password"
-            value={form.pass}
+            value={form.pass} 
             onChange={handleInputChange}
             name="pass"
         />
