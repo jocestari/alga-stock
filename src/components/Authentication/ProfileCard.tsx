@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import Form from '../../shared/Form'
 import Input from '../../shared/Input'
 

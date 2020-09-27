@@ -1,7 +1,5 @@
 import React from 'react'
 import './Table.scss'
-import Products from './Table.mockdata'
-import Header from '../../components/Header'
 import organizeData from '../../utils/organizeDataForTable'
 import Button from '../Button'
 
